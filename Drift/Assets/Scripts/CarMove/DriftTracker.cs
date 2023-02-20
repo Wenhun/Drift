@@ -39,7 +39,6 @@ public class DriftTracker : MonoBehaviour
         if(other.tag == "Player")
         {
             ResetPosition();
-            print("!!!");
         }
     }
 }

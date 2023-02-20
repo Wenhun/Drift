@@ -4,6 +4,8 @@ public class SelectTarget : MonoBehaviour
 {
     [SerializeField] Transform leftPointer;
     [SerializeField] Transform rightPointer;
+    [SerializeField] Animator animateIcon;
+    [SerializeField] SpriteRenderer directionIcon;
 
     RaycastHit hit;
     Transform currentTarget;
@@ -26,10 +28,14 @@ public class SelectTarget : MonoBehaviour
             if(currentTarget == leftPointer)
             {
                 currentTarget = rightPointer;
+                animateIcon.SetTrigger("right");
+                directionIcon.flipY = false;
             }
             else
             {
                 currentTarget = leftPointer;
+                animateIcon.SetTrigger("left");
+                directionIcon.flipY = true;
             }
         }
     }
