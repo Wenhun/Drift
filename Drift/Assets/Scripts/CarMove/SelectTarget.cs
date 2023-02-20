@@ -7,11 +7,11 @@ public class SelectTarget : MonoBehaviour
 
     RaycastHit hit;
     Transform currentTarget;
-    public Transform GetTarget { get => currentTarget; }
+    public Vector3 GetTarget { get => currentTarget.position; }
 
     void Start()
     {
-        currentTarget = leftPointer;
+        currentTarget = leftPointer.gameObject.transform;
     }
 
     void Update()

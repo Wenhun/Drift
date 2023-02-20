@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class CarMover : MonoBehaviour
@@ -22,8 +21,9 @@ public class CarMover : MonoBehaviour
 
     void MoveCar()
     {
+        //TODO: create Range variable for "distanceThreshold"
         float distanceThreshold = 1f;
-        if (Vector3.Distance(transform.position, target.GetTarget.position) >= distanceThreshold)
+        if (Vector3.Distance(transform.position, target.GetTarget) >= distanceThreshold)
         {
             moveForce += transform.forward * moveSpeed * Time.deltaTime;
             transform.position += moveForce * Time.deltaTime;
@@ -32,7 +32,7 @@ public class CarMover : MonoBehaviour
 
     void SteerCar()
     {
-        Vector3 direction = target.GetTarget.position - transform.position;
+        Vector3 direction = target.GetTarget - transform.position;
         direction.y = 0;
         Quaternion targetRotation = Quaternion.LookRotation(direction);
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
