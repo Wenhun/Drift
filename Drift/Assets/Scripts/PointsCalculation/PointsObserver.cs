@@ -15,8 +15,6 @@ namespace Drift.PointsCalculation
         [SerializeField] DriftPointsText driftPointsText;
         [SerializeField] TotalPointsText totalPointsText;
 
-        float lapDistance;
-
         void Start()
         {
             selectTarget.newPoint += CalculateTotalPoints;
@@ -33,7 +31,7 @@ namespace Drift.PointsCalculation
 
         void CalculateTotalPoints()
         {
-            float currentDriftPoints = lapDistance;
+            float currentDriftPoints = driftTracker.CurrentLapDistance;
             int totalPoints = pointsCalculation.TotalPoints(currentDriftPoints);
             totalPointsText.textChange(totalPoints);
             driftPointsText.enabled = false; //TODO: don't work, complete later
@@ -44,7 +42,6 @@ namespace Drift.PointsCalculation
 
         void GetCurrentCompleteDistance(float distance)
         {
-            lapDistance = distance;
             int circlePoints = pointsCalculation.CurrentCirclePoints(distance);
             driftBar.BarChange(distance, driftTracker.MaxDistance);
 
