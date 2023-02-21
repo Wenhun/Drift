@@ -1,51 +1,56 @@
 using UnityEngine;
 
-public class CarMover : MonoBehaviour
+namespace Drift.CarMove
 {
-    [SerializeField] float moveSpeed = 50;
-    [SerializeField] float maxSpeed = 15;
-    [SerializeField] float rotationSpeed = 5.0f;
-    [SerializeField] float drag = 0.98f;
-    [SerializeField] float traction = 1;
-    [SerializeField] SelectTarget target;
-
-    Vector3 moveForce;
-
-    void Update()
+    public class CarMover : MonoBehaviour
     {
-        MoveCar();
-        SteerCar();
-        MaxSpeedLimit();
-        TractionCar();
-    }
+        [Header("Preferences")]
+        [SerializeField] float moveSpeed = 50;
+        [SerializeField] float maxSpeed = 15;
+        [SerializeField] float rotationSpeed = 5.0f;
+        [SerializeField] float drag = 0.98f;
+        [SerializeField] float traction = 1;
+        [Header("Target")]
+        [SerializeField] SelectTarget target;
 
-    void MoveCar()
-    {
-        //TODO: create Range variable for "distanceThreshold"
-        float distanceThreshold = 1f;
-        if (Vector3.Distance(transform.position, target.GetTarget) >= distanceThreshold)
+        Vector3 moveForce;
+
+        void Update()
         {
-            moveForce += transform.forward * moveSpeed * Time.deltaTime;
-            transform.position += moveForce * Time.deltaTime;
+            MoveCar();
+            SteerCar();
+            MaxSpeedLimit();
+            TractionCar();
         }
-    }
 
-    void SteerCar()
-    {
-        Vector3 direction = target.GetTarget - transform.position;
-        direction.y = 0;
-        Quaternion targetRotation = Quaternion.LookRotation(direction);
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-    }
+        void MoveCar()
+        {
+            //TODO: create Range variable for "distanceThreshold"
+            float distanceThreshold = 1f;
+            if (Vector3.Distance(transform.position, target.GetTarget.position) >= distanceThreshold)
+            {
+                moveForce += transform.forward * moveSpeed * Time.deltaTime;
+                transform.position += moveForce * Time.deltaTime;
+            }
+        }
 
-    void MaxSpeedLimit()
-    {
-        moveForce *= drag;
-        moveForce = Vector3.ClampMagnitude(moveForce, maxSpeed);
-    }    
-    
-    void TractionCar()
-    {
-        moveForce = Vector3.Lerp(moveForce.normalized, transform.forward, traction * Time.deltaTime) * moveForce.magnitude;
+        void SteerCar()
+        {
+            Vector3 direction = target.GetTarget.position - transform.position;
+            direction.y = 0;
+            Quaternion targetRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        }
+
+        void MaxSpeedLimit()
+        {
+            moveForce *= drag;
+            moveForce = Vector3.ClampMagnitude(moveForce, maxSpeed);
+        }
+
+        void TractionCar()
+        {
+            moveForce = Vector3.Lerp(moveForce.normalized, transform.forward, traction * Time.deltaTime) * moveForce.magnitude;
+        }
     }
 }

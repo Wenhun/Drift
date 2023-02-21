@@ -1,11 +1,14 @@
 using UnityEngine;
 
-public class LookToTarget : MonoBehaviour
+namespace Drift.CarMove
 {
-    [SerializeField] Transform target;
-
-    void Update()
+    public class LookToTarget : MonoBehaviour
     {
-        transform.LookAt(target);
+        [SerializeField] Transform target;
+
+        void Update()
+        {
+            transform.LookAt(target);
+        }
     }
 }

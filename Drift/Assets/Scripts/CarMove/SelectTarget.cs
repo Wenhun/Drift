@@ -1,52 +1,52 @@
+using System;
 using UnityEngine;
 
-public class SelectTarget : MonoBehaviour
+namespace Drift.CarMove
 {
-    [SerializeField] Transform leftPointer;
-    [SerializeField] Transform rightPointer;
-    [SerializeField] Animator animateIcon;
-    [SerializeField] SpriteRenderer directionIcon;
-
-    RaycastHit hit;
-    Transform currentTarget;
-    public Vector3 GetTarget { get => currentTarget.position; }
-    public float circleDistance {get => Mathf.PI * Vector2.Distance(leftPointer.position, rightPointer.position); }
-
-    void Start()
+    public class SelectTarget : MonoBehaviour
     {
-        currentTarget = leftPointer.gameObject.transform;
-    }
+        [SerializeField] Transform leftPointer;
+        [SerializeField] Transform rightPointer;
 
-    void Update()
-    {
-        if(Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
+        RaycastHit hit;
+        Transform currentTarget;
+        public Transform GetTarget { get => currentTarget; }
+
+        public event Action newPoint;
+
+        void Start()
         {
-            if (Physics.Raycast(GetRay(), out hit))
+            currentTarget = leftPointer.gameObject.transform;
+        }
+
+        void Update()
+        {
+            if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
             {
-                if(hit.transform.tag == "Plane")
+                if (Physics.Raycast(GetRay(), out hit))
                 {
-                    transform.position = hit.point;
-                }
-                
-                if (currentTarget == leftPointer)
-                {
-                    currentTarget = rightPointer;
-                    animateIcon.SetTrigger("right");
-                    directionIcon.flipY = false;
-                }
-                else
-                {
-                    currentTarget = leftPointer;
-                    animateIcon.SetTrigger("left");
-                    directionIcon.flipY = true;
+                    if (hit.transform.tag == "Plane")
+                    {
+                        newPoint.Invoke();
+                        transform.position = hit.point;
+                    }
+
+                    if (currentTarget == leftPointer)
+                    {
+                        currentTarget = rightPointer;
+                    }
+                    else
+                    {
+                        currentTarget = leftPointer;
+                    }
                 }
             }
         }
+
+        static Ray GetRay()
+        {
+            return Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
+        }
     }
 
-    static Ray GetRay()
-    {
-        return Camera.main.ScreenPointToRay(Input.GetTouch(0).position);
-    }
-    
 }

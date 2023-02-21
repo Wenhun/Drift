@@ -1,19 +1,22 @@
 using UnityEngine;
 
-public class RoadChecker : MonoBehaviour
+namespace Drift.CarMove
 {
-    CarMover carMover;
-    
-    void Start()
+    public class RoadChecker : MonoBehaviour
     {
-        carMover = GetComponent<CarMover>();
-    }
+        CarMover carMover;
 
-    void OnTriggerStay(Collider other)
-    {
-        if(other.tag != "Plane")
+        void Start()
         {
-            carMover.enabled = false;
+            carMover = GetComponent<CarMover>();
+        }
+
+        void OnTriggerStay(Collider other)
+        {
+            if (other.tag != "Plane")
+            {
+                carMover.enabled = false;
+            }
         }
     }
 }
