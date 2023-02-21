@@ -2,41 +2,48 @@ using UnityEngine;
 
 public class DriftTracker : MonoBehaviour
 {
-    [SerializeField] float currentLapDistance;
-    [SerializeField] float distanceToStart;
+    [SerializeField] Transform tracker;
 
     private Vector3 lastPosition;
-    Vector3 startPosition;
+    float currentLapDistance;
+    float maxDistance;
+    bool isDrifting = false;
+
+    public float CurrentLapDistance {get => currentLapDistance;}
+    public bool IsDrifting {get => isDrifting;}
 
     void Start()
     {
-        ResetPosition();
+        maxDistance = GetComponent<SelectTarget>().circleDistance;
     }
     
     void Update()
     {
-        //TODO: Create methods
-        float distance = Vector3.Distance(transform.position, lastPosition);
-        currentLapDistance += distance;
-        lastPosition = transform.position;
-
-        distanceToStart = Vector3.Distance(transform.position, startPosition);
-
-        if( distanceToStart <= 0.1f & currentLapDistance > 0.5f )
+        //TODO: create methods
+        if(isDrifting)
         {
-            currentLapDistance = 0;
+            float distance = Vector3.Distance(lastPosition, tracker.position);
+            currentLapDistance += distance;
+            lastPosition = tracker.position;
+
+            if (currentLapDistance >= maxDistance)
+            {
+                currentLapDistance = 0;
+                isDrifting = false;
+            }
         }
     }
 
-    public void ResetPosition()
+    void ResetPosition()
     {
-        lastPosition = transform.position;
-        startPosition = transform.position;
+        isDrifting = true;
+        lastPosition = tracker.position;
+        currentLapDistance = 0;
     }
 
     void OnTriggerEnter(Collider other)
     {
-        if(other.tag == "Player")
+        if(other.tag == "Player" & !isDrifting)
         {
             ResetPosition();
         }

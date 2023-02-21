@@ -10,6 +10,7 @@ public class SelectTarget : MonoBehaviour
     RaycastHit hit;
     Transform currentTarget;
     public Vector3 GetTarget { get => currentTarget.position; }
+    public float circleDistance {get => Mathf.PI * Vector2.Distance(leftPointer.position, rightPointer.position); }
 
     void Start()
     {
@@ -22,20 +23,23 @@ public class SelectTarget : MonoBehaviour
         {
             if (Physics.Raycast(GetRay(), out hit))
             {
-                transform.position = hit.point;
-            }
-
-            if(currentTarget == leftPointer)
-            {
-                currentTarget = rightPointer;
-                animateIcon.SetTrigger("right");
-                directionIcon.flipY = false;
-            }
-            else
-            {
-                currentTarget = leftPointer;
-                animateIcon.SetTrigger("left");
-                directionIcon.flipY = true;
+                if(hit.transform.tag == "Plane")
+                {
+                    transform.position = hit.point;
+                }
+                
+                if (currentTarget == leftPointer)
+                {
+                    currentTarget = rightPointer;
+                    animateIcon.SetTrigger("right");
+                    directionIcon.flipY = false;
+                }
+                else
+                {
+                    currentTarget = leftPointer;
+                    animateIcon.SetTrigger("left");
+                    directionIcon.flipY = true;
+                }
             }
         }
     }
